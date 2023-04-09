@@ -1,4 +1,4 @@
-# CVE-2011-2523 - vsftpd_2_3_4_exploit
+# node-smtp-enum | Simple User Enumeration 
 
 This is a POC for enumerating users from a SMTP server using SMTP Commands
 
