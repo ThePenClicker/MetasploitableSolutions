@@ -32,7 +32,7 @@ PS D:\NodeJS\smtp-enum> node .\smtp-enum-vrfy.js
 [*] SMTP VRFY Check Complete
 ```
 
-#Installation
+# Installation and usage
 
 git clone https://github.com/ThePenClicker/MetasploitableSolutions.git
 
