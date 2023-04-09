@@ -21,7 +21,9 @@ const SMTP_HOST = "192.168.31.129";
  *
  * @type {string}
  */
-const SMTP_MODE = "VRFY";
+const SMTP_MODE = "RCPT";
+
+const SMTP_FROM = "root@localhost";
 
 /**
  * An object that contains the host and port options for establishing a network connection.
@@ -54,9 +56,10 @@ const VerboseOutput = false;
  * @param {string} username - The username to be checked for existence on the server.
  * @returns {Promise<void>} A Promise that resolves when the username has been checked.
  */
-function CheckVRFY(username) {
+function CheckRCPT(username) {
   return new Promise((resolve, reject) => {
     const client = net.createConnection(options, (err) => {
+    
       if (err) {
         console.log(err);
         reject(err);
@@ -64,7 +67,8 @@ function CheckVRFY(username) {
       }
 
       client.write(`HELO ${SMTP_HOST}\r\n`);
-      client.write(`${SMTP_MODE} ${username}\r\n`);
+      client.write(`MAIL FROM: ${SMTP_FROM}\r\n`);
+      client.write(`${SMTP_MODE} TO:${username}\r\n`);
     });
 
     client.on("data", (data) => {
@@ -75,7 +79,7 @@ function CheckVRFY(username) {
       }
       if (VerboseOutput && data.includes("User unknown")) {
         console.log(`--[!] User:${username} does not exist`);
-      } else if (data.includes("2.0.0")) {
+      } else if (data.includes("2.1.5")) {
         console.log(`--[+] User:${username} exists`);
       }
 
@@ -102,13 +106,13 @@ async function processFile() {
   console.log(`[*] Mode: ${SMTP_MODE}`);
   console.log(`[*] Verbose Output: ${VerboseOutput}`);
   console.log(`[*] File: usernames.txt`);
-  console.log(`[*] SMTP VRFY Check Started`);
+  console.log(`[*] SMTP RCPT Check Started`);
 
   for await (const user of rl) {
-    await CheckVRFY(user);
+    await CheckRCPT(user);
   }
 
-  console.log(`[*] SMTP VRFY Check Complete`);
+  console.log(`[*] SMTP RCPT Check Complete`);
   rl.close();
   fileStream.close();
 
